@@ -21,7 +21,7 @@
   --border: #27272a;
   --input: #27272a;
   --ring: #39ff14;
-  --radius: 0.5rem;
+  --radius: 0;
 }
 
 @theme inline {

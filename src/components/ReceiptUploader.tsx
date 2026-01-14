@@ -21,6 +21,7 @@ export default function ReceiptUploader({ onResult }: ReceiptUploaderProps) {
     const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState('');
     const [dragActive, setDragActive] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleUpload = async (file: File | undefined) => {
@@ -29,8 +30,10 @@ export default function ReceiptUploader({ onResult }: ReceiptUploaderProps) {
         setLoading(true);
         setStatus('Initializing AI Engine...');
         setProgress(0);
+        setPreviewUrl(URL.createObjectURL(file));
 
         try {
+            // Step 1: Optical Character Recognition (Vision)
             const result = await Tesseract.recognize(
                 file,
                 'eng',
@@ -38,17 +41,37 @@ export default function ReceiptUploader({ onResult }: ReceiptUploaderProps) {
                     logger: m => {
                         if (m.status === 'recognizing text') {
                             setProgress(Math.floor(m.progress * 100));
-                            setStatus('Extracting Intelligence...');
+                            setStatus('Extracting Text...');
                         }
                     }
                 }
             );
 
-            const parsedData = parseOCRText(result.data.text);
-            onResult(parsedData);
+            // Step 2: Intelligent Classification (Groq API)
+            setStatus('AI Categorization...');
+            const aiResponse = await fetch('/api/classify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rawText: result.data.text }),
+            });
+
+            if (!aiResponse.ok) throw new Error('AI Classification failed');
+
+            const aiData = await aiResponse.json();
+
+            // Step 3: Send back the combined data
+            onResult({
+                id: Math.random().toString(36).substr(2, 9),
+                merchant: aiData.merchant || "Unknown Merchant",
+                total: aiData.total || 0,
+                date: aiData.date || new Date().toISOString().split('T')[0],
+                category: aiData.category || "General",
+                rawText: result.data.text
+            });
+
             setStatus('Capture Successful!');
         } catch (error) {
-            console.error('OCR Error:', error);
+            console.error('Processing Error:', error);
             setStatus('Capture Failed');
         } finally {
             setTimeout(() => setLoading(false), 1000);
@@ -126,10 +149,10 @@ export default function ReceiptUploader({ onResult }: ReceiptUploaderProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass p-8 rounded-[2rem] border border-zinc-800 bg-zinc-950/50"
+            className="glass p-8 border border-zinc-800 bg-zinc-950/50"
         >
             <div
-                className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-[1.5rem] p-10 transition-all duration-300 overflow-hidden ${dragActive ? 'border-primary bg-primary/5' : 'border-zinc-800 bg-zinc-900/30'
+                className={`relative flex flex-col items-center justify-center border-2 border-dashed p-10 transition-all duration-300 overflow-hidden ${dragActive ? 'border-primary bg-primary/5' : 'border-zinc-800 bg-zinc-900/30'
                     } ${loading ? 'cursor-wait' : 'cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/50'}`}
                 onClick={() => !loading && fileInputRef.current?.click()}
                 onDragEnter={handleDrag}
@@ -156,14 +179,14 @@ export default function ReceiptUploader({ onResult }: ReceiptUploaderProps) {
                             className="flex flex-col items-center space-y-6 w-full"
                         >
                             <div className="relative">
-                                <div className="w-20 h-20 rounded-full border-2 border-zinc-800 border-t-primary animate-spin" />
+                                <div className="w-20 h-20 border-2 border-zinc-800 border-t-primary animate-spin" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-xs font-bold text-primary">{progress}%</span>
                                 </div>
                             </div>
                             <div className="text-center">
                                 <p className="text-zinc-400 font-bold tracking-tight text-sm uppercase">{status}</p>
-                                <div className="w-40 h-1 bg-zinc-900 rounded-full mt-4 overflow-hidden">
+                                <div className="w-40 h-1 bg-zinc-900 mt-4 overflow-hidden">
                                     <motion.div
                                         className="h-full bg-primary"
                                         initial={{ width: 0 }}
@@ -179,20 +202,39 @@ export default function ReceiptUploader({ onResult }: ReceiptUploaderProps) {
                             animate={{ opacity: 1 }}
                             className="flex flex-col items-center"
                         >
-                            <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mb-6">
+                            <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-6">
                                 <ImageIcon className="w-8 h-8 text-primary" />
                             </div>
                             <h3 className="text-lg font-bold text-white tracking-tight">Capture Intelligence</h3>
                             <p className="text-zinc-500 text-xs mt-2 text-center max-w-[180px] font-medium leading-relaxed">
                                 Drop your receipt here to begin the capture process
                             </p>
-                            <div className="mt-8 flex items-center gap-2 px-3 py-1.5 bg-zinc-950/50 rounded-full border border-zinc-900 text-[10px] font-bold text-zinc-600">
+                            <div className="mt-8 flex items-center gap-2 px-3 py-1.5 bg-zinc-950/50 border border-zinc-900 text-[10px] font-bold text-zinc-600">
                                 <Sparkles className="w-3 h-3 text-primary" />
                                 POWERED BY AI OCR
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
+
+                {previewUrl && !loading && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute inset-0 z-10 bg-zinc-950"
+                    >
+                        <img
+                            src={previewUrl}
+                            alt="Receipt Preview"
+                            className="w-full h-full object-contain opacity-50"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="bg-zinc-950/80 p-4 border border-zinc-800">
+                                <p className="text-primary text-xs font-bold tracking-widest uppercase">Last Upload Preview</p>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
             </div>
         </motion.div>
     );
