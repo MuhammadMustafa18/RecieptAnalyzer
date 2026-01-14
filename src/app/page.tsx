@@ -14,7 +14,7 @@ import {
 import { format, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f59e0b', '#10b981'];
+const COLORS = ['#39ff14', '#00f3ff', '#ff00ff', '#fffd00', '#ff0000', '#ffffff'];
 
 export default function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -95,8 +95,7 @@ export default function Dashboard() {
     <div className="min-h-screen pb-20">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 -right-24 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_#39ff1410,_transparent_50%)]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12">
@@ -109,31 +108,24 @@ export default function Dashboard() {
           {/* Header Section */}
           <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <motion.div variants={itemVariants}>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100/50 text-indigo-600 text-xs font-bold mb-4 tracking-wider uppercase">
-                <Activity className="w-3 h-3" />
-                Live Analysis
-              </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-                Nexus <span className="text-indigo-600">Finance</span>
+
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                Task 3
               </h1>
-              <p className="text-slate-500 mt-3 text-lg font-medium">
-                Turning receipts into strategic financial intelligence.
-              </p>
+
             </motion.div>
 
             <motion.div variants={itemVariants} className="flex items-center gap-3">
-              <div className="glass px-6 py-3 rounded-2xl shadow-xl shadow-indigo-500/5 flex items-center gap-4">
-                <div className="p-2.5 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+              <div className="glass px-6 py-3 rounded-2xl flex items-center gap-4">
+                <div className="p-2.5 bg-primary rounded-xl text-black">
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Reporting Period</p>
-                  <p className="text-sm font-bold text-slate-700">{format(new Date(), 'MMMM yyyy')}</p>
+                  <p className="text-[10px] text-zinc-500 font-bold tracking-widest uppercase">Reporting Period</p>
+                  <p className="text-sm font-bold text-white">{format(new Date(), 'MMMM yyyy')}</p>
                 </div>
               </div>
-              <button className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-slate-400 hover:text-indigo-600">
-                <Settings className="w-5 h-5" />
-              </button>
+
             </motion.div>
           </header>
 
@@ -149,23 +141,18 @@ export default function Dashboard() {
                 key={stat.label}
                 variants={itemVariants}
                 whileHover={{ y: -5 }}
-                className="glass p-6 rounded-[2rem] relative overflow-hidden group shadow-lg shadow-slate-200/50"
+                className="glass p-6 rounded-[2rem] relative overflow-hidden group"
               >
-                <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity`}>
+                <div className={`absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-[0.05] transition-opacity`}>
                   <stat.icon className="w-24 h-24" />
                 </div>
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 bg-${stat.color}-500/10 rounded-2xl text-${stat.color}-600`}>
+                  <div className={`p-3 bg-zinc-900 rounded-2xl text-primary`}>
                     <stat.icon className="w-6 h-6" />
                   </div>
-                  {stat.trend && (
-                    <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100">
-                      {stat.trend}
-                    </span>
-                  )}
                 </div>
-                <p className="text-sm font-bold text-slate-400 tracking-wide">{stat.label}</p>
-                <p className="text-2xl font-black text-slate-900 mt-1">{stat.value}</p>
+                <p className="text-sm font-bold text-zinc-500 tracking-wide">{stat.label}</p>
+                <p className="text-2xl font-black text-white mt-1">{stat.value}</p>
               </motion.div>
             ))}
           </div>
@@ -173,15 +160,15 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Primary Visualizations */}
             <div className="lg:col-span-8 space-y-8">
-              <motion.div variants={itemVariants} className="glass p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50">
+              <motion.div variants={itemVariants} className="glass p-8 rounded-[2.5rem]">
                 <div className="flex items-center justify-between mb-10">
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 tracking-tight">Financial Trajectory</h3>
-                    <p className="text-sm text-slate-400 font-medium">Visualizing your spending velocity</p>
+                    <h3 className="text-xl text-white tracking-tight">Financial Trajectory</h3>
+                    <p className="text-sm text-zinc-500 font-medium">Visualizing your spending velocity</p>
                   </div>
-                  <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100">
-                    <button className="px-4 py-1.5 bg-white text-indigo-600 rounded-lg text-xs font-bold shadow-sm">Daily</button>
-                    <button className="px-4 py-1.5 text-slate-400 rounded-lg text-xs font-bold hover:text-slate-600">Weekly</button>
+                  <div className="flex items-center gap-2 bg-zinc-900 p-1.5 rounded-xl border border-zinc-800">
+                    <button className="px-4 py-1.5 bg-zinc-800 text-primary rounded-lg text-xs font-bold">Daily</button>
+                    <button className="px-4 py-1.5 text-zinc-500 rounded-lg text-xs font-bold hover:text-zinc-300">Weekly</button>
                   </div>
                 </div>
                 <div className="h-[350px] w-full">
@@ -189,54 +176,51 @@ export default function Dashboard() {
                     <AreaChart data={dailyData}>
                       <defs>
                         <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#39ff14" stopOpacity={0.2} />
+                          <stop offset="95%" stopColor="#39ff14" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#18181b" vertical={false} />
                       <XAxis
                         dataKey="date"
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }}
+                        tick={{ fill: '#71717a', fontSize: 11, fontWeight: 600 }}
                         dy={10}
                       />
                       <YAxis
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }}
+                        tick={{ fill: '#71717a', fontSize: 11, fontWeight: 600 }}
                         dx={-10}
                       />
                       <Tooltip
-                        contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', padding: '15px' }}
+                        contentStyle={{ borderRadius: '12px', background: '#101014', border: '1px solid #27272a', padding: '15px' }}
                       />
                       <Area
                         type="monotone"
                         dataKey="amount"
-                        stroke="#6366f1"
-                        strokeWidth={4}
+                        stroke="#39ff14"
+                        strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#colorAmt)"
                         animationBegin={800}
-                        animationDuration={2000}
+                        animationDuration={1500}
                       />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
               </motion.div>
 
-              <motion.div variants={itemVariants} className="glass rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50">
-                <div className="p-8 border-b border-slate-50/50 flex items-center justify-between bg-white/30">
+              <motion.div variants={itemVariants} className="glass rounded-[2.5rem] overflow-hidden">
+                <div className="p-8 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50">
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 tracking-tight">Recent Intelligence</h3>
-                    <p className="text-sm text-slate-400 font-medium">The last 5 transaction captures</p>
+                    <h3 className="text-xl text-white tracking-tight">Recent </h3>
+                    <p className="text-sm text-zinc-500 font-medium">The last 5 transaction captures</p>
                   </div>
-                  <button className="group flex items-center gap-2 text-sm font-bold text-indigo-600">
-                    Audit Log
-                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </button>
+
                 </div>
-                <div className="divide-y divide-slate-50/50">
+                <div className="divide-y divide-zinc-800">
                   <AnimatePresence>
                     {expenses.length > 0 ? (
                       expenses.slice(0, 5).map((expense, idx) => (
@@ -245,22 +229,22 @@ export default function Dashboard() {
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ delay: idx * 0.1 }}
                           key={expense.id}
-                          className="p-6 flex items-center gap-5 hover:bg-white/50 transition-colors cursor-pointer group"
+                          className="p-6 flex items-center gap-5 hover:bg-zinc-800/50 transition-colors cursor-pointer group"
                         >
-                          <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-slate-400 shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
-                            <Tag className="w-6 h-6 group-hover:text-indigo-600 transition-colors" />
+                          <div className="w-14 h-14 bg-zinc-900 rounded-2xl flex items-center justify-center text-zinc-600 border border-zinc-800 group-hover:border-primary/30 group-hover:scale-110 transition-all">
+                            <Tag className="w-6 h-6 group-hover:text-primary transition-colors" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-base font-bold text-slate-800 truncate tracking-tight">{expense.merchant}</p>
+                            <p className="text-base font-bold text-white truncate tracking-tight">{expense.merchant}</p>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-slate-400 font-bold tracking-wider uppercase">{expense.category}</span>
-                              <span className="w-1 h-1 rounded-full bg-slate-200" />
-                              <span className="text-xs text-slate-400 font-medium tracking-tight">{expense.date}</span>
+                              <span className="text-xs text-primary font-bold tracking-wider uppercase">{expense.category}</span>
+                              <span className="w-1 h-1 rounded-full bg-zinc-800" />
+                              <span className="text-xs text-zinc-500 font-medium tracking-tight">{expense.date}</span>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-lg font-black text-slate-900 leading-none">${expense.total.toFixed(2)}</p>
-                            <div className="inline-flex items-center text-[10px] font-bold text-emerald-500 mt-1">
+                            <p className="text-lg font-black text-white leading-none">${expense.total.toFixed(2)}</p>
+                            <div className="inline-flex items-center text-[10px] font-bold text-primary opacity-60 mt-1">
                               Processed
                             </div>
                           </div>
@@ -286,8 +270,8 @@ export default function Dashboard() {
                 <ReceiptUploader onResult={handleNewReceipt} />
               </motion.div>
 
-              <motion.div variants={itemVariants} className="glass p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50">
-                <h3 className="text-xl font-black text-slate-800 mb-8 tracking-tight">Cluster Allocation</h3>
+              <motion.div variants={itemVariants} className="glass p-8 rounded-[2.5rem]">
+                <h3 className="text-xl font-black text-white mb-8 tracking-tight">Cluster Allocation</h3>
                 <div className="h-[250px] relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -308,23 +292,23 @@ export default function Dashboard() {
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Diversification</p>
-                    <p className="text-2xl font-black text-slate-800">{categoryData.length}</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sectors</p>
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Diversification</p>
+                    <p className="text-2xl font-black text-white">{categoryData.length}</p>
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Sectors</p>
                   </div>
                 </div>
                 <div className="mt-10 space-y-4">
                   {categoryData.slice(0, 4).map((cat, i) => (
-                    <div key={cat.name} className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50/50 transition-colors">
+                    <div key={cat.name} className="flex items-center justify-between p-3 rounded-2xl hover:bg-zinc-800/50 transition-colors">
                       <div className="flex items-center gap-3">
-                        <div className="w-4 h-4 rounded-full ring-4 ring-white shadow-sm" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                        <span className="text-sm text-slate-600 font-bold tracking-tight">{cat.name}</span>
+                        <div className="w-4 h-4 rounded-full ring-2 ring-zinc-900 border border-white/10" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                        <span className="text-sm text-zinc-400 font-bold tracking-tight">{cat.name}</span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-sm text-slate-900 font-black tracking-tighter">${cat.value.toFixed(2)}</span>
-                        <div className="w-16 h-1.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                        <span className="text-sm text-white font-black tracking-tighter">${cat.value.toFixed(2)}</span>
+                        <div className="w-16 h-1 bg-zinc-800 rounded-full mt-2 overflow-hidden">
                           <div
-                            className="h-full bg-slate-900/10"
+                            className="h-full bg-primary"
                             style={{ width: `${(cat.value / totalMonthly) * 100}%`, backgroundColor: COLORS[i % COLORS.length] }}
                           />
                         </div>
@@ -333,7 +317,7 @@ export default function Dashboard() {
                   ))}
                   {categoryData.length === 0 && (
                     <div className="text-center py-6">
-                      <p className="text-xs text-slate-400 font-medium">Categorization pending scan...</p>
+                      <p className="text-xs text-zinc-600 font-medium">Categorization pending scan...</p>
                     </div>
                   )}
                 </div>
